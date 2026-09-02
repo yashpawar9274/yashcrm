@@ -161,6 +161,12 @@ Key pages:
 - **Data** — Supabase (Postgres + Auth + Storage + RLS).
 - **WhatsApp** — Meta Cloud API (official WhatsApp Business API).
 
+## Developer
+
+Developed by **Yash Pawar**
+
+Contact: **7385066631**
+
 ## Contributing
 
 This is a template, not a collaborative product — the expected flow is

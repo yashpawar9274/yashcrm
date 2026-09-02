@@ -1540,6 +1540,7 @@
     },
     "sections": {
       "overview": "Overview",
+      "billing": "Billing & plan",
       "profile": "Your profile",
       "security": "Login & security",
       "appearance": "Appearance",

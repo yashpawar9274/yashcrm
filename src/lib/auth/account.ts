@@ -31,6 +31,8 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
 import { hasMinRole, isAccountRole, type AccountRole } from "./roles";
 import {
+  canUseAccount,
+  getPlan,
   isAccountPlan,
   isSubscriptionStatus,
   type AccountPlan,
@@ -207,4 +209,46 @@ export async function requireRole(min: AccountRole): Promise<AccountContext> {
     );
   }
   return ctx;
+}
+
+/** Resolve account context and block paid operations for inactive accounts. */
+export async function requireActiveAccount(
+  min: AccountRole,
+): Promise<AccountContext> {
+  const ctx = await requireRole(min);
+  if (
+    !canUseAccount({
+      plan: ctx.account.plan,
+      subscriptionStatus: ctx.account.subscriptionStatus,
+      trialEndsAt: ctx.account.trialEndsAt,
+    })
+  ) {
+    throw new ForbiddenError(
+      'Your subscription is inactive. Contact an account admin to restore access.',
+    );
+  }
+  return ctx;
+}
+
+export async function requirePlanCapacity(
+  ctx: AccountContext,
+  resource: "members" | "automations",
+): Promise<void> {
+  const maximum = getPlan(ctx.account.plan).limits[resource];
+  if (maximum == null) return;
+
+  const table = resource === "members" ? "profiles" : "automations";
+  const { count, error } = await ctx.supabase
+    .from(table)
+    .select("id", { count: "exact", head: true })
+    .eq("account_id", ctx.accountId);
+  if (error) {
+    console.error(`[requirePlanCapacity] ${resource} count error:`, error);
+    throw new ForbiddenError("Could not verify plan capacity");
+  }
+  if ((count ?? 0) >= maximum) {
+    throw new ForbiddenError(
+      `Your ${ctx.account.plan} plan has reached its ${resource} limit. Upgrade your plan to continue.`,
+    );
+  }
 }
