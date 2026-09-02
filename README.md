@@ -87,6 +87,10 @@ cp .env.local.example .env.local   # fill in Supabase + Meta creds
 npm run dev
 ```
 
+For platform operators, set `SUPER_ADMIN_EMAILS` to a comma-separated
+allowlist of Supabase auth emails. Those users can open `/admin` to monitor
+all workspaces and subscription status.
+
 Open <http://localhost:3000>. You'll be redirected to `/login` (or
 `/dashboard` if already signed in).
 
