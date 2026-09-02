@@ -57,7 +57,7 @@ export function Header({ onOpenSidebar }: HeaderProps) {
     "U";
 
   return (
-    <header className="flex h-14 shrink-0 items-center justify-between gap-3 border-b border-border bg-background px-4 lg:px-6">
+    <header className="flex h-[76px] shrink-0 items-center justify-between gap-3 border-b border-border/70 bg-background/80 px-4 backdrop-blur-xl lg:px-10">
       <div className="flex min-w-0 items-center gap-2">
         {/* Hamburger — mobile only. 44×44 hit target per Apple HIG. */}
         <button
@@ -68,9 +68,12 @@ export function Header({ onOpenSidebar }: HeaderProps) {
         >
           <Menu className="h-5 w-5" />
         </button>
-        <h1 className="truncate text-base font-semibold text-foreground sm:text-lg">
+        <div className="min-w-0">
+          <p className="hidden text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground sm:block">Operations</p>
+          <h1 className="truncate text-lg font-semibold text-foreground sm:text-xl">
           {t(titleKey as string)}
-        </h1>
+          </h1>
+        </div>
       </div>
 
       <div className="flex items-center gap-1 sm:gap-2">
@@ -78,7 +81,7 @@ export function Header({ onOpenSidebar }: HeaderProps) {
 
         <DropdownMenu>
         <DropdownMenuTrigger
-          className="flex items-center gap-2 rounded-md px-1 py-1 transition-colors hover:bg-muted/70 focus:bg-muted/70 focus:outline-none data-popup-open:bg-muted/70 sm:gap-3 sm:pl-1 sm:pr-3"
+          className="flex items-center gap-2 rounded-xl border border-border/70 bg-card/60 px-2 py-1.5 transition-colors hover:bg-muted/70 focus:bg-muted/70 focus:outline-none data-popup-open:bg-muted/70 sm:gap-3 sm:pl-2 sm:pr-3"
           aria-label={t("openAccountMenu")}
         >
           <Avatar className="size-8">

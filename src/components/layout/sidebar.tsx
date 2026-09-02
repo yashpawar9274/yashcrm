@@ -176,22 +176,22 @@ export function Sidebar({ open = false, onClose }: SidebarProps) {
       <aside
         className={cn(
           // Mobile: fixed drawer that slides in from the left.
-          "fixed inset-y-0 left-0 z-40 flex h-full w-64 flex-col border-r border-border bg-card",
+          "fixed inset-y-0 left-0 z-40 flex h-full w-72 flex-col border-r border-white/10 bg-[#101316] text-white shadow-2xl shadow-black/20",
           "transition-transform duration-200 ease-out will-change-transform",
           open ? "translate-x-0" : "-translate-x-full",
           // Desktop: static, always visible — reset all the mobile framing.
-          "lg:static lg:z-0 lg:w-60 lg:translate-x-0 lg:transition-none",
+          "lg:static lg:z-0 lg:w-64 lg:translate-x-0 lg:transition-none",
         )}
         aria-label="Primary"
       >
         {/* Logo row. On mobile we put a close button here; on desktop the
             close button is hidden since the sidebar is always-visible. */}
-        <div className="flex h-14 shrink-0 items-center justify-between gap-2 border-b border-border px-4">
+        <div className="flex h-[76px] shrink-0 items-center justify-between gap-2 border-b border-white/10 px-5">
           <Link href="/dashboard" className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#25d366] text-[#06110a] shadow-lg shadow-[#25d366]/20">
               <MessageSquare className="h-4 w-4" />
             </div>
-            <span className="text-sm font-semibold text-foreground">
+            <span className="font-display text-base font-semibold tracking-tight text-white">
               {t("title")}
             </span>
           </Link>
@@ -206,8 +206,9 @@ export function Sidebar({ open = false, onClose }: SidebarProps) {
         </div>
 
         {/* Main navigation */}
-        <nav className="flex-1 overflow-y-auto px-3 py-4">
-          <ul className="flex flex-col gap-1">
+        <nav className="flex-1 overflow-y-auto px-3 py-6">
+          <p className="px-3 pb-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/35">Workspace</p>
+          <ul className="flex flex-col gap-1.5">
             {navItems.map((item) => {
               const isActive =
                 pathname === item.href ||
@@ -229,13 +230,13 @@ export function Sidebar({ open = false, onClose }: SidebarProps) {
                     href={item.href}
                     className={cn(
                       // Taller on mobile so fingers can hit the row reliably (≥44px).
-                      "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors lg:py-2",
+                      "group relative flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition-all lg:py-2.5",
                       isActive
-                        ? "bg-primary/10 text-primary"
-                        : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                        ? "bg-white/10 text-white shadow-sm"
+                        : "text-white/55 hover:bg-white/[0.06] hover:text-white",
                     )}
                   >
-                    <item.icon className="h-4 w-4" />
+                    <item.icon className={cn("h-4 w-4 transition-colors", isActive ? "text-[#25d366]" : "text-white/45 group-hover:text-white/80")} />
                     <span className="flex-1">{t(item.labelKey as string)}</span>
                     {item.beta && (
                       <span
@@ -268,7 +269,7 @@ export function Sidebar({ open = false, onClose }: SidebarProps) {
             })}
           </ul>
 
-          <div className="my-4 border-t border-border" />
+          <div className="my-6 border-t border-white/10" />
 
           <ul className="flex flex-col gap-1">
             {bottomNavItems.map((item) => {
@@ -278,10 +279,10 @@ export function Sidebar({ open = false, onClose }: SidebarProps) {
                   <Link
                     href={item.href}
                     className={cn(
-                      "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors lg:py-2",
+                      "flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition-colors lg:py-2.5",
                       isActive
-                        ? "bg-primary/10 text-primary"
-                        : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                        ? "bg-white/10 text-white"
+                        : "text-white/55 hover:bg-white/[0.06] hover:text-white",
                     )}
                   >
                     <item.icon className="h-4 w-4" />
@@ -294,7 +295,7 @@ export function Sidebar({ open = false, onClose }: SidebarProps) {
         </nav>
 
         {/* User section */}
-        <div className="shrink-0 border-t border-border p-3">
+        <div className="shrink-0 border-t border-white/10 p-3">
           {/* Account name display — surfaced only when the account
               name differs from the user's own name (see
               `showAccountStrip`). For a default solo account the two
@@ -302,7 +303,7 @@ export function Sidebar({ open = false, onClose }: SidebarProps) {
               below; for renamed or shared accounts it tells the user
               which account they're acting in. */}
           {showAccountStrip && account?.name ? (
-            <div className="mb-2 flex items-center gap-2 px-3 text-xs text-muted-foreground">
+            <div className="mb-2 flex items-center gap-2 px-3 text-xs text-white/50">
               <UsersRound className="size-3.5 shrink-0" />
               {/* `title=` exposes the full name on hover when it
                   gets truncated (long account names + narrow
@@ -331,7 +332,7 @@ export function Sidebar({ open = false, onClose }: SidebarProps) {
             </div>
           ) : null}
           <DropdownMenu>
-            <DropdownMenuTrigger className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition-colors hover:bg-muted/60 focus:bg-muted/60 focus:outline-none data-popup-open:bg-muted/60">
+            <DropdownMenuTrigger className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition-colors hover:bg-white/[0.06] focus:bg-white/[0.06] focus:outline-none data-popup-open:bg-white/[0.06]">
               <Avatar className="size-8 shrink-0">
                 {profile?.avatar_url ? (
                   <AvatarImage
@@ -346,10 +347,10 @@ export function Sidebar({ open = false, onClose }: SidebarProps) {
                 </AvatarFallback>
               </Avatar>
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium text-foreground">
+                <p className="truncate text-sm font-medium text-white">
                   {profile?.full_name ?? t("defaultUser")}
                 </p>
-                <p className="truncate text-xs text-muted-foreground">
+                <p className="truncate text-xs text-white/45">
                   {profile?.email ?? ""}
                 </p>
               </div>
