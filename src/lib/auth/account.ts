@@ -30,6 +30,12 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 
 import { createClient } from "@/lib/supabase/server";
 import { hasMinRole, isAccountRole, type AccountRole } from "./roles";
+import {
+  isAccountPlan,
+  isSubscriptionStatus,
+  type AccountPlan,
+  type SubscriptionStatus,
+} from "@/lib/saas/plans";
 
 // ------------------------------------------------------------
 // Errors
@@ -88,7 +94,13 @@ export interface AccountContext {
   /** Caller's role within their account. */
   role: AccountRole;
   /** Lightweight account meta — id + name. */
-  account: { id: string; name: string };
+  account: {
+    id: string;
+    name: string;
+    plan: AccountPlan;
+    subscriptionStatus: SubscriptionStatus;
+    trialEndsAt: string | null;
+  };
 }
 
 /**
@@ -149,7 +161,7 @@ export async function getCurrentAccount(): Promise<AccountContext> {
   // RLS, so it stays robust against cache staleness and older schemas.
   const { data: account, error: accountErr } = await supabase
     .from("accounts")
-    .select("id, name")
+    .select("id, name, plan, subscription_status, trial_ends_at")
     .eq("id", data.account_id)
     .maybeSingle();
 
@@ -168,7 +180,15 @@ export async function getCurrentAccount(): Promise<AccountContext> {
     userId: user.id,
     accountId: data.account_id,
     role: data.account_role,
-    account: { id: account.id, name: account.name },
+    account: {
+      id: account.id,
+      name: account.name,
+      plan: isAccountPlan(account.plan) ? account.plan : "free",
+      subscriptionStatus: isSubscriptionStatus(account.subscription_status)
+        ? account.subscription_status
+        : "active",
+      trialEndsAt: account.trial_ends_at ?? null,
+    },
   };
 }
 
